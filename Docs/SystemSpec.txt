@@ -1,0 +1,34 @@
+# Product Requirements Document (PRD)
+
+## Project Name
+Peripheral Serial Emulator
+
+## Purpose
+To provide a configurable hardware emulator that mimics the behavior of UART-based devices for development and testing.
+
+## Target Users
+- Embedded developers
+- Hardware QA testers
+- System integrators
+
+## Functional Requirements
+- Simulate basic serial communication at common baud rates (9600–115200)
+- Handle ±15 V inputs safely via op-amp conditioning
+- Visualize live input voltage on a mobile interface
+- Switch between emulated devices or states via button or host command
+- Use ESP32 ADC or ADS1115 for analog sampling
+
+## Non-Functional Requirements
+- Real-time response under 10 ms for mode switching
+- Modular hardware interface (pluggable or configurable via jumpers)
+- Mobile-friendly display output (e.g. BLE, UART-to-phone)
+
+## Constraints
+- MCU: ESP32 or ATmega328P
+- Power: ±15 V available, with onboard regulation
+- Size: Small enclosure-friendly PCB
+
+## Future Ideas
+- BLE configuration interface
+- EEPROM config presets
+- Protocol sniffing / logging mode

@@ -1,0 +1,14 @@
+# Design Notes
+
+## Input Conditioning
+Initial testing showed ±13 V swings caused op-amp clipping. Added resistor divider (e.g., 1.8k & 10k) to scale to ±11 V. Verified op-amp remained linear with new setup.
+
+## Multiplexer Behavior
+DG408 switching time measured at ~250 ns. ADC sampling across 8 channels at 500 Hz achievable.
+
+## ADC Comparison
+ESP32 internal ADC showed noise and offset drift. ADS1115 preferred for accuracy, but limits speed to ~860 SPS.
+
+## Issues & Experiments
+- TL072 input headroom error in early design — corrected by adjusting divider
+- ESP32 ADC tested with averaging — improved stability

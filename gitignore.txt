@@ -1,0 +1,16 @@
+# Ignore KiCad generated files
+*.bak
+*.kicad_prl
+*.tmp
+
+# Ignore compiled firmware
+firmware/.pio/
+firmware/.vscode/
+
+# Ignore OS files
+.DS_Store
+Thumbs.db
+
+# Ignore temp logs
+*.log
+*.swp
