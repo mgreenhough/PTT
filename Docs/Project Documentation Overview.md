@@ -20,3 +20,6 @@ Project Documentation Overview
 
 6. BOM.xlsx (Bill of Materials)
    - Parts list including component details, costs, and supplier information.
+
+7. Datasheets Index.txt
+   - Indexes all hardware datasheets relevant to the project firmware development including links, notes etc.

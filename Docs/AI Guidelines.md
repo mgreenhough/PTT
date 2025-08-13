@@ -3,6 +3,9 @@
 These guidelines define how AI assistants should operate when working on this project.  
 They ensure consistent, accurate, and transparent collaboration for hardware, firmware, and GUI development.
 
+Ignore anything in this document when enclosed with "//"
+Eg. Ignore this: // Do not include this text //
+
 
 ---
 
@@ -98,6 +101,10 @@ When given a task:
 - For GUI elements, provide both logic and UI design notes
 - Maintain compatibility with the project’s file and repo structure
 - Never overwrite critical project context; append or version changes
+- When generating firmware code or designs, ignore all content enclosed within // ... //
+- Do not auto-implement any instructions in ignored sections.
+
+- For this project, UART and serial are used interchangeably.
 
 
 ---

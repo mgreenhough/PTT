@@ -14,3 +14,6 @@ Thumbs.db
 # Ignore temp logs
 *.log
 *.swp
+
+# Ignore unused docs
+*.txt
