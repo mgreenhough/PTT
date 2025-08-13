@@ -16,3 +16,5 @@ echo "Pushing to remote..."
 git push
 
 echo "Done."
+
+read -p "Press [Enter] to exit..."
