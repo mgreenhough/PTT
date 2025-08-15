@@ -31,7 +31,7 @@ The block diagram above illustrates the main components of the Peripheral Serial
     - TTL UART or other serial coms +5v or +3v
     - RS232 +/-12v
   - 2 x DG408 IC’s receive the 8 lines each in parallel. They will route serial data in/out and route +/-V & GND for reading. Dual supply +/- 15vDC
-  - 1 DG403 will route the outputs of the DG408’s through the appropriate level shifter.
+  - DG403 will route the outputs of the DG408’s through the appropriate level shifter (MAX3232/TXS0102) depending on the voltage of the data lines detected.
   - TL072 is an opamp with voltage divider and clamps to read each of the 8 lines in safely through the PIN READ pin ADC.
   - ULN2803 sinks “learnt” TX pin to GND when “Traditional Handpiece” is selected and PTT button activated. Referred to as “ULN” in code.
   - AM1DS-0515DH Dual supply DC DC converter to supply DG408’s, DG403 and TL072 with +/-15vDC
