@@ -19,6 +19,7 @@ Better communication: Easier, more natural radio use encourages consistent conta
 - Intuitive GUI accessible via locally hosted wifi hot spot and available without internet or cellular network connection
 - Compatible with "traditional" style handpiece's that use a simple grounded pin for PTT
 - Inbuilt debug 8 channel bipolar voltage analyser and UART detector operating on separate core
+- Provide use and productivity statistics through the GUI
 
 ## Who is it for?
 - Earthmovers

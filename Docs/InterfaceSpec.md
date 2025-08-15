@@ -97,6 +97,12 @@ If applicable, refer to block designs [PSE3](Docs/Assets/Block Designs/PSE3.png)
         1. A drop down box titled “Current Profile” will display the current profile.
         2. If the profile has had a successful calibration and its settings are stored on device, a large green “Status” box will say “RUNNING”. All pins stored under the current profile will be displayed in a list. A Serial Register will also be opened and display any serial.println() (SP) from the code.
         3. If the profile has NOT had a successful calibration and its settings are NOT stored on device, a large RED “Status” box will say “LEARNING REQUIRED” with sub text prompting user to change MODE SWITCH to LEARN and complete Learn Procedure.
+
+        A "Statistics" box will be shown in an obvious place and format.
+        It will show but not be limited to 2 statistics:
+          - Total times PTT function has been called (TXstart & TXstop is 1 PTT call).
+          - Total TX time (cumulatively, the time between TXstart & TXstop).
+          - A "RESET" button will allow user to reset stats.
     
       
 

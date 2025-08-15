@@ -70,6 +70,9 @@ The diagram above illustrates how the device is connected to the existing radio.
   - One core to continually run inbuilt **8 channel bipolar voltage analyser and UART detector**. See section **2** of [**Interface Specification**](Docs\InterfaceSpec.md)
   - One core to run the **GUI and PTT emulator**. See section **3** of [**Interface Specification**](Docs\InterfaceSpec.md)
   - **The core running the GUI and emulator has explicit priority in the event of hardware requirement conflict (MUX1)** It can however, wait for the other core to finish its main loop. (The other core polling whether the GUI/emulator core requires access and the start of main loop and not continuing if access is required.)
+- Provide use and productivity statistics through the GUI including but not limited to:
+  - Total times PTT function used
+  - Total tx time (thus time saved)
 
 ## Firmware Requirements
 - Set explicitly, tasks to their respective cores
@@ -79,6 +82,7 @@ The diagram above illustrates how the device is connected to the existing radio.
   - GUI, see section **3** of [**Interface Specification**](Docs\InterfaceSpec.md).
   - Learn, record, store and emulate TX Start/Stop functions, See functionality requirements in [**Firmware Specification**](Docs\FirmwareSpec.md).
   - Store radio "Profiles" to non volatile memory on the device.
+  - Provide use and productivity statistics through the GUI as mentioned above. Store to non volatile memory.
 - Operate robustly and efficiently under all expected conditions.
 - Remain maintainable, modular, and easily understandable for future development.
 - Respect hardware priority hierarchy
