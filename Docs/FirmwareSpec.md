@@ -6,7 +6,7 @@
 
 ## **NOTE:** 
 
-- One of the main intentions of the LEARN and PTT functions is purely to arbitrarily (115,200) **oversample unknown** serial commands at an **unknown** baud rate. Record and store the commands. Then retransmit the same commands at the same oversampled baud rate (115,200) with the intention that the radio will receive the commands and interpret them at its own baud rate ie. 57,600 for GME. We are not decoding or frame matching.
+### When learning and retransmitting TXstart and TXstop commands, the device is **intentionally agnostic to the radio’s actual baud rate.** Different radios may use different commands and baud rates. To handle this, the device **oversamples all incoming serial commands at 115,200 baud,** records the raw waveform, and stores it. During retransmission, the commands are sent at the **same oversampled rate (115,200 baud),** relying on the radio to interpret them at its native baud (e.g., 57,600 baud for GME) and sample mid bit. **No baud detection, decoding or frame matching is performed** — the system purely matches waveforms.
 
 - In this document:
   - "SP(X)" means serial.println(X) in the GUI. 
@@ -113,14 +113,14 @@ On boot:
            6. The device now needs to record and store to non volatile memory under the current profile, the “TXstart” and “TXstop” commands for spoofing.
              - Prompt the user to “Press & Hold Transmit Button”.
              - If UART received, record the incoming UART _command and stop when >16 unchanged bits are received. SP.green(TXstart Received).
-             - Store as TXstart _command temporarily.
+             - Clip the command to 4 high bits after the last low bit to ensure complete stop bits at oversampled baud.
+             - Store as TXstart _command in non volatile memory under the current profile. SP.green(TXstart command recorded!)
              - If UART not received, Prompt user to “Release Transmit Button” and repeat step 5 times. If still not received, SP.red(Unable to read TX _command) and prompt user to retry or contact support. GUI returns to “LEARN” step 3 after 5 seconds. 
              - Prompt user to “Release Transmit Button”.
              - If UART received, record the incoming UART _command and stop when >16 unchanged bits are received. SP.green(TXstop Received).
-             - Store as as TXstop _command temporarily.
+             - Clip the command to 4 high bits after the last low bit to ensure complete stop bits at oversampled baud.
+             - Store as TXstop _command in non volatile memory under the current profile. SP.green(TXstop command recorded!)
              - If UART not received, go back to start and repeat step 5 times. If still not received, SP.red(Unable to read TX _command) and prompt user to retry or contact support. GUI returns to “LEARN” step 3 after 5 seconds.
-             - Clip both commands to 1 bit after the last low bit and store to non volatile memory under the current profile.
-             - SP.green(TX Commands Recorded Successfuly!)
 
 -------------
 
@@ -150,6 +150,7 @@ On boot:
         6. SP.green(Profile ready).
 
         7. If current profile_type is “trad”: 
+          - Load last used profile.
           - Assign TXpin to ULN so that when PTT button is pressed, TXpin is sunk to GND through the ULN until PTT button is released. SP.green(TXpin assigned)
           - When PTT button is pressed by the user, ground TXpin and SP.green(TXstart) *(start millis())
           - When PTT button is released by the user, un-ground TXpin and SP.green(TXstop). *(stop millis())
@@ -159,7 +160,8 @@ On boot:
             - Total tx time (time between when PTT is pressed to when it is released. Add (stop_millis() - start_millis()) to total).
 
         8. Else if current profile_type is “remote”:
-          - Set DG403 to the DG403(state) stored in current profile and SP.green(DG403 Set). *if profiles DG403's state is DG403(TXS) the voltage analyser will not run.
+          - Load last used profile.
+          - Set DG403 to the DG403(state) stored in current profile and SP.green(DG403 Set).
           - When PTT button is pressed by the user, transmit TXstart _command on **RXpin** and SP.green(TXstart). *(start millis())
           - When PTT button is released by the user, transmit “TXstop” on **RXpin** and SP.green(TXstop). *(stop millis())
 

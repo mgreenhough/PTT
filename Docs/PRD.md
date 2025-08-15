@@ -30,16 +30,16 @@ The block diagram above illustrates the main components of the Peripheral Serial
     - GND
     - TTL UART or other serial coms +5v or +3v
     - RS232 +/-12v
-    - 2 x DG408 IC’s receive the 8 lines each in parallel. They will route serial data in/out and route +/-V & GND for reading. Dual supply +/- 15vDC
-    - 1 DG403 will route the outputs of the DG408’s through the appropriate level shifter.
-    - TL072 is an opamp with voltage divider and clamps to read each of the 8 lines in safely through the PIN READ pin ADC.
-    - ULN2803 sinks “learnt” TX pin to GND when “Traditional Handpiece” is selected and PTT button activated. Referred to as “ULN” in code.
-    - AM1DS-0515DH Dual supply DC DC converter to supply DG408’s, DG403 and TL072 with +/-15vDC
-    - MAX3232 will provide level shifting for and RS232 or 5V UART signals - Referred to as “MAX” in code.
-    - TXS0102 will provide level shifting for and 3.3 and 5V UART signals - Referred to as “TXS” in code.
-    - PTT is a momentary switch that is pulled high through a resistor and activates TX when grounded.
-    - MODE SWITCH is a SPST switch that selects between LEARN and RUN.
-    - WIFI Web Host Interface - The MCU will host a website to use as a GUI and will be its primary interface. It will be accessed via the MCU’s onboard WIFI.
+  - 2 x DG408 IC’s receive the 8 lines each in parallel. They will route serial data in/out and route +/-V & GND for reading. Dual supply +/- 15vDC
+  - 1 DG403 will route the outputs of the DG408’s through the appropriate level shifter.
+  - TL072 is an opamp with voltage divider and clamps to read each of the 8 lines in safely through the PIN READ pin ADC.
+  - ULN2803 sinks “learnt” TX pin to GND when “Traditional Handpiece” is selected and PTT button activated. Referred to as “ULN” in code.
+  - AM1DS-0515DH Dual supply DC DC converter to supply DG408’s, DG403 and TL072 with +/-15vDC
+  - MAX3232 will provide level shifting for and RS232 or 5V UART signals - Referred to as “MAX” in code.
+  - TXS0102 will provide level shifting for and 3.3 and 5V UART signals - Referred to as “TXS” in code.
+  - PTT is a momentary switch that is pulled high through a resistor and activates TX when grounded.
+  - MODE SWITCH is a SPST switch that selects between LEARN and RUN.
+  - WIFI Web Host Interface - The MCU will host a website to use as a GUI and will be its primary interface. It will be accessed via the MCU’s onboard WIFI.
 
 ## Physical Interface
 
@@ -61,13 +61,14 @@ The diagram above illustrates how the device is connected to the existing radio.
 
 
 ## Functional Requirements
-- Emulate basic PTT functions by recoding over sampled serial commands and playing them back at the same baud rate.
+- Emulate basic PTT functions of "traditionoal" and "remote" handpieces by:
+  - For "traditional": Learning what pin it uses to transmit and selectivly connecting it to ground when a PTT input is received from the user.
+  - For "remote": Learning its TX & RX pins and then recording oversampled serial commands and playing them back at the same baud rate as recorded so as to emulate its PTT function.
 - Handle ±15 V inputs safely via op-amp conditioning
-- Visualize live input voltage and UART activity on a mobile and offline GUI
+- Visualize live input voltage and UART activity on a mobile and offline GUI using ESP32 ADC in DMA mode for high speed analog sampling.
 - Switch between user saved profiles of a number of different emulated devices
-- Use ESP32 ADC in DMA mode for high speed analog sampling
 - Use both cores of the esp32 with explicit priority hierarchy: 
-  - One core to continually run inbuilt **8 channel bipolar voltage analyser and UART detector**. See section **2** of [**Interface Specification**](Docs\InterfaceSpec.md)
+  - One core to run inbuilt **8 channel bipolar voltage analyser and UART detector**. See section **2** of [**Interface Specification**](Docs\InterfaceSpec.md)
   - One core to run the **GUI and PTT emulator**. See section **3** of [**Interface Specification**](Docs\InterfaceSpec.md)
   - **The core running the GUI and emulator has explicit priority in the event of hardware requirement conflict (MUX1)** It can however, wait for the other core to finish its main loop. (The other core polling whether the GUI/emulator core requires access and the start of main loop and not continuing if access is required.)
 - Provide use and productivity statistics through the GUI including but not limited to:
@@ -80,9 +81,10 @@ The diagram above illustrates how the device is connected to the existing radio.
   - Voltage analysis and UART detection, see section **2** of [**Interface Specification**](Docs\InterfaceSpec.md).
   - GUI access via local WIFI Hotspot.
   - GUI, see section **3** of [**Interface Specification**](Docs\InterfaceSpec.md).
-  - Learn, record, store and emulate TX Start/Stop functions, See functionality requirements in [**Firmware Specification**](Docs\FirmwareSpec.md).
+  - Learn, record, store and emulate TX Start/Stop commands, See functionality requirements in [**Firmware Specification**](Docs\FirmwareSpec.md).
   - Store radio "Profiles" to non volatile memory on the device.
   - Provide use and productivity statistics through the GUI as mentioned above. Store to non volatile memory.
+- Operate and LEARN two distinctly different modalities. ("traditional" and "remote" handpieces)
 - Operate robustly and efficiently under all expected conditions.
 - Remain maintainable, modular, and easily understandable for future development.
 - Respect hardware priority hierarchy

@@ -72,7 +72,7 @@ If applicable, refer to block designs [PSE3](Docs/Assets/Block Designs/PSE3.png)
 ---
 
 
-## **3. GUI and PTT emulator**
+## **3. GUI for PTT emulator**
   As referenced in [**Functional Requirements**](docs/PRD.md)
 
     ### **GUI**
@@ -91,10 +91,11 @@ If applicable, refer to block designs [PSE3](Docs/Assets/Block Designs/PSE3.png)
         5. A box will open that displays the serial register. All future references in these documents to SP will display here serial.println().
         6. The user will be guided through the LEARN function of the device.
         7. If successful, the user will then be notified that the “Learn Procedure” has been successful, be prompted to switch the device to RUN and notified that WIFI connection to the device is no longer required unless changing/adding profiles.
+        8. Profile is saved to non volatile memory as "last used"
         8. The page will return to 3. if mode switch is still in "LEARN" position.
 
       #### RUN
-        1. A drop down box titled “Current Profile” will display the current profile.
+        1. A drop down box titled “Current Profile” will display the current profile which, on boot, wil be the "last Used" profile.
         2. If the profile has had a successful calibration and its settings are stored on device, a large green “Status” box will say “RUNNING”. All pins stored under the current profile will be displayed in a list. A Serial Register will also be opened and display any serial.println() (SP) from the code.
         3. If the profile has NOT had a successful calibration and its settings are NOT stored on device, a large RED “Status” box will say “LEARNING REQUIRED” with sub text prompting user to change MODE SWITCH to LEARN and complete Learn Procedure.
 
@@ -107,7 +108,7 @@ If applicable, refer to block designs [PSE3](Docs/Assets/Block Designs/PSE3.png)
       
 
       #### DEBUG
-        - A separate GUI page that displays live, the voltage and any serial activity on each of the 8 channels.
+        - A separate GUI page that displays live, the voltage and any serial activity on each of the 8 channels. (provide a "Back" or "Exit" button to return to main GUI)
         - Shows all 8 channels from top to bottom and graphically scrolls voltages horizontally across the page.
         - A block on each channels left hand side contains the following:
           - Channel (1-8), size small
@@ -116,9 +117,3 @@ If applicable, refer to block designs [PSE3](Docs/Assets/Block Designs/PSE3.png)
           - Serial activity counter, size small
       - GUI updates should be maintained at a user-friendly rate (10-30 Hz per channel) or be averaged so as to appear smooth.
       - A button to access calibration/recalibration should be obviously located and labeled.
-      
-    ### **PTT**
-      - When the MODE SWITCH is moved to RUN, the device will simply wait for the user to press the PTT button.
-      - Upon receiving the PTT action, the device will use the pins saved under the current profile to either:
-      - If "traditional Handpiece” was selected in the LEARN procedure, the PTT pin saved under the current profile will be grounded through the ULN2803 until the user releases the PTT button.
-      - If “Remote Handpiece" was selected in the LEARN procedure, the “TXstart” serial command saved under the current profile will be transmitted on the RX pin. When the user releases the PTT button the “TXstop” serial command saved under the current profile will be transmitted on the RX pin.

@@ -37,4 +37,11 @@ Better communication: Easier, more natural radio use encourages consistent conta
 - User follows provided instructions and GUI prompts to learn devices PTT
 - User changes mode switch to run
 
+## Challenges
+  *The function of the device will be split between the following two important distinctions.
+
+Modern radios use two types of handpiece:
+  - "Traditional". This is the simplest type of handpiece and contains, usually, only a speaker, a microphone and the PTT button. When the PTT button is pressed, it simply grounds a pin within the radio and transmission is activated until the user releases the PTT button and the pin is un-grounded. With these radios, we simply need to "LEARN" what pin the radio uses and initiate transmission by connecting it to GND.
+  - "Remote". This type of handpiece is becoming increasingly common but adds complexity to any "universal" remote PTT. The handpiece typically includes all the features of a "traditional handpiece" but also includes control buttons like channel change, volume and scan etc... When any of the buttons are pressed, including PTT, a serial command is sent to the radio to initiate and control features. This is where peripheral serial emulation comes into play. For these handpieces, we need to "LEARN" the PTT commands and emulate them to activate transmission remotely.
+
 
