@@ -12,8 +12,8 @@ Project Documentation Overview
 3. InterfaceSpec.txt
    - Details hardware and software interfaces such as signals, protocols, UART settings.
 
-4. SystemSpec.txt
-   - System-level design including architecture, hardware components, and block diagrams.
+4. FirmwareSpec.txt
+   - Details the firmware requirements, how it will function and pin assignments.
 
 5. DesignNotes.txt
    - Development notes, experiments, pinouts, and lessons learned during the project.

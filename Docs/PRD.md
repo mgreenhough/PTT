@@ -30,11 +30,13 @@ The block diagram above illustrates the main components of the Peripheral Serial
     - GND
     - TTL UART or other serial coms +5v or +3v
     - RS232 +/-12v
-  - 2 x DG408 IC’s receive the 8 lines each in parallel. They will route serial data in/out and route +/-V & GND for reading. Dual supply +/- 15vDC
-  - DG403 will route the outputs of the DG408’s through the appropriate level shifter (MAX3232/TXS0102) depending on the voltage of the data lines detected.
+  - 2 x 74HC595 Shift Registers. 74HC595-1 to drive 2 DG408 MUX's and 74HC595-2 to Sink PTT channel to GND through ULN2803.
+  - 2 x DG408 MUX’s receive the 8 lines each in parallel. They will route serial data in/out and route +/-V & GND for reading. Dual supply +/- 15vDC.
+  - DG403-1 will route the outputs of the DG408’s through the appropriate level shifter (MAX3232/TXS0102) depending on the voltage of the data lines detected.
+  - DG403-2 selects voltage for the TXS0102 on the "radio" side between 3.3v and 5v.
   - TL072 is an opamp with voltage divider and clamps to read each of the 8 lines in safely through the PIN READ pin ADC.
   - ULN2803 sinks “learnt” TX pin to GND when “Traditional Handpiece” is selected and PTT button activated. Referred to as “ULN” in code.
-  - AM1DS-0515DH Dual supply DC DC converter to supply DG408’s, DG403 and TL072 with +/-15vDC
+  - AM1DS-0515DH Dual supply DC DC converter to supply DG408’s, DG403-1 and TL072 with +/-15vDC
   - MAX3232 will provide level shifting for and RS232 or 5V UART signals - Referred to as “MAX” in code.
   - TXS0102 will provide level shifting for and 3.3 and 5V UART signals - Referred to as “TXS” in code.
   - PTT is a momentary switch that is pulled high through a resistor and activates TX when grounded.

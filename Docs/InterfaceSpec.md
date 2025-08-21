@@ -21,7 +21,7 @@ If applicable, refer to block designs [PSE3.1](Docs/Assets/Block Designs/PSE3.1.
     **8 channel bipolar voltage analysis & UART/serial activity detection** - In this case UART and serial are used interchangeably.
 
     **Objective:**
-    - Analyse voltage and Detect UART activity across 8 bipolar voltage channels using a DG408 analog multiplexer level shifted by TL072 into ESP32 ADC.
+    - Analyse voltage and Detect UART activity across 8 bipolar voltage channels using a DG408 analog multiplexer (MUX1 driven by 74HC595-1) level shifted by TL072 into ESP32 ADC in DMA mode.
     - Maintain GUI updates at a user-friendly rate (10-30 Hz per channel).
     - Reliably detect UART activity within a 12 byte window without needing to decode entire UART packets or detect start bits specifically.
     - Provide a live graphical and numeric voltage readout for each channel.
