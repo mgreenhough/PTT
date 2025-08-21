@@ -19,7 +19,7 @@ To provide a configurable hardware emulator that spoofs recorded serial commands
 
 ## System Architecture
 
-![Block Diagram](Docs/Assets/Block Designs/PSE3.png)
+![Block Diagram](Docs/Assets/Block Designs/PSE3.1.png)
 
 The block diagram above illustrates the main components of the Peripheral Serial Emulator (PSE).  
 
@@ -39,6 +39,8 @@ The block diagram above illustrates the main components of the Peripheral Serial
   - TXS0102 will provide level shifting for and 3.3 and 5V UART signals - Referred to as “TXS” in code.
   - PTT is a momentary switch that is pulled high through a resistor and activates TX when grounded.
   - MODE SWITCH is a SPST switch that selects between LEARN and RUN.
+  - RX1/2 are MCU GPIO interrupt pins aimed purely at detecting which pin (of the 2) receives first.
+  - U1RX/TX are UART 1 on the MCU.
   - WIFI Web Host Interface - The MCU will host a website to use as a GUI and will be its primary interface. It will be accessed via the MCU’s onboard WIFI.
 
 ## Physical Interface

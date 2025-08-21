@@ -9,7 +9,7 @@
 ## 1. Context & RAG 
 These interfaces relate to the **Peripheral Serial Emulator (PSE)** defined in the [**README.md**](Docs/README.md)
 It is further referenced directly in **Functional Requirements** of [**PRD.md**](docs/PRD.md).  
-If applicable, refer to block designs [PSE3](Docs/Assets/Block Designs/PSE3.png) & [Hardware Interface](Docs/Assets/Block Designs/Hardware Interface.png).
+If applicable, refer to block designs [PSE3.1](Docs/Assets/Block Designs/PSE3.1.png) & [Hardware Interface](Docs/Assets/Block Designs/Hardware Interface.png).
 
 
 ---

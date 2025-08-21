@@ -6,8 +6,8 @@
 
 ## **NOTE:** 
 
-### When learning and retransmitting TXstart and TXstop commands, the device is **intentionally agnostic to the radio’s actual baud rate.** Different radios may use different commands and baud rates. To handle this, the device **oversamples all incoming serial commands at 115,200 baud,** records the raw waveform, and stores it. During retransmission, the commands are sent at the **same oversampled rate (115,200 baud),** relying on the radio to interpret them at its native baud (e.g., 57,600 baud for GME) and sample mid bit. **No baud detection, decoding or frame matching is performed** — the system purely matches waveforms.
-
+### - When learning and retransmitting TXstart and TXstop commands, the device is **intentionally agnostic to the radio’s actual baud rate.** Different radios may use different commands and baud rates. To handle this, the device **oversamples all incoming serial commands at 115,200 baud,** records the raw waveform, and stores it. During retransmission, the commands are sent at the **same oversampled rate (115,200 baud),** relying on the radio to interpret them at its native baud (e.g., 57,600 baud for GME) and sample mid bit. **No baud detection, decoding or frame matching is performed** — the system purely matches waveforms.
+- RX1/2 are GPIO interrupt pins aimed purely at detecting which pin receives first. Once detected, it is then read by a dedicated MCU UART - U1.
 - In this document:
   - "SP(X)" means serial.println(X) in the GUI. 
   - "SP.red(X)" means make the font colour red in the GUI.
@@ -17,7 +17,6 @@
     - MAX3232 will provide level shifting for and RS232 or 5V UART signals - Referred to as “MAX” in code.
     - TXS0102 will provide level shifting for and 3.3 and 5V UART signals - Referred to as “TXS” in code.
   - UART and serial are used interchangeably.
-
 - This document, whilst explicit in it's requirements is not prescriptive in its method. If there is a more efficient, simpler or clearer path to the same outcome, it should be employed.
 
 
@@ -27,7 +26,7 @@
 ## 1. Context & RAG 
 This specification relates to the **Peripheral Serial Emulator (PSE)** defined in the [**README.md**](Docs/README.md)
 It is further referenced directly in **Firmware Requirements** of [**PRD.md**](docs/PRD.md).  
-If applicable, refer to block designs [PSE3](Docs/Assets/Block Designs/PSE3.png) & [Hardware Interface](Docs/Assets/Block Designs/Hardware Interface.png).
+If applicable, refer to block designs [PSE3.1](Docs/Assets/Block Designs/PSE3.1.png) & [Hardware Interface](Docs/Assets/Block Designs/Hardware Interface.png).
 
 
 ---
@@ -98,29 +97,31 @@ On boot:
           2. Define each channel and pin_type as per **2. Data Structure** and store.
           3. If any combination of DATA and RS232 pins other than 2 DATA **OR** 2 RS232 pins are stored, SP.red(Data pins unclear, retry pin LEARN or contact support). GUI returns to “LEARN” step 3 after 5 seconds.
           4. If 2 DATA **OR** 2 RS232 pins are stored, the device will determine which of the data pins is TX & RX by determining which pin transmits first when user activates PTT. The commands are separated by less than 200us so it has to be accurate!
-             - Hardware conflict will arise with now with this core requiring priority access to both MUX1 and MUX2.
-             - If pins are RS232, keep DG403() set to MAX.
-             - Else if pins are DATA, set DG403() to TXS.
-             - Establish UART RX1 and RX2 at highest reliable baud rate (115,200?).
-             - Prompt user to “Press & Hold Transmit Button”.
-             - Determine which UART transmitted first and store temporarily as pin_name(TX).
-             - Prompt user to “Release Transmit Button”.
-             - Confirm which UART transmitted first referencing the temporarily stored pin.
-             - If not confirmed SP.red(TX Unclear) and repeat 3 times. If still not successful SP.red(TX unclear, contact support).
-             - Else if confirmed SP.green(TX Confirmed) and store the TX pin as pin_name(TX) and the other pin as pin_name(RX) under the current profile.
-             - Store DG403 current input state as DG403(state) under the current profile.
-           5. Hardware conflict has now ended and voltage analyser core can resume use of MUX1 (eg. set access required flag to 0).
-           6. The device now needs to record and store to non volatile memory under the current profile, the “TXstart” and “TXstop” commands for spoofing.
-             - Prompt the user to “Press & Hold Transmit Button”.
-             - If UART received, record the incoming UART _command and stop when >16 unchanged bits are received. SP.green(TXstart Received).
-             - Clip the command to 4 high bits after the last low bit to ensure complete stop bits at oversampled baud.
-             - Store as TXstart _command in non volatile memory under the current profile. SP.green(TXstart command recorded!)
-             - If UART not received, Prompt user to “Release Transmit Button” and repeat step 5 times. If still not received, SP.red(Unable to read TX _command) and prompt user to retry or contact support. GUI returns to “LEARN” step 3 after 5 seconds. 
-             - Prompt user to “Release Transmit Button”.
-             - If UART received, record the incoming UART _command and stop when >16 unchanged bits are received. SP.green(TXstop Received).
-             - Clip the command to 4 high bits after the last low bit to ensure complete stop bits at oversampled baud.
-             - Store as TXstop _command in non volatile memory under the current profile. SP.green(TXstop command recorded!)
-             - If UART not received, go back to start and repeat step 5 times. If still not received, SP.red(Unable to read TX _command) and prompt user to retry or contact support. GUI returns to “LEARN” step 3 after 5 seconds.
+            - Hardware conflict will arise with now with this core requiring priority access to both MUX1 and MUX2.
+            - If pins are RS232, keep DG403() set to MAX.
+            - Else if pins are DATA, set DG403() to TXS.
+            - Assign interrupts to RX1 and RX2 of MCU.
+            - Prompt user to “Press & Hold Transmit Button”.
+            - Determine which UART transmitted first (RX1/RX2) and store temporarily, the input channel, as pin_name(TX).
+            - Prompt user to “Release Transmit Button”.
+            - Confirm which UART transmitted first referencing the temporarily stored pin.
+            - If not confirmed SP.red(TX Unclear) and repeat 3 times. If still not successful SP.red(TX unclear, contact support).
+            - Else if confirmed SP.green(TX Confirmed) and store the TX pin as pin_name(TX) and the other pin as pin_name(RX) under the current profile.
+            - Store DG403 current input state as DG403(state) under the current profile.
+          5. The device now needs to record and store to non volatile memory under the current profile, the “TXstart” and “TXstop” commands for spoofing.
+            - Select pin_name(TX) on MUX1
+            - Prompt the user to “Press & Hold Transmit Button”.
+            - Establish UART1 at 115 200 baud.
+            - If UART received on U1RX, record the incoming UART _command and stop when >16 unchanged bits are received. SP.green(TXstart Received).
+            - Clip the command to 4 high bits after the last low bit to ensure complete stop bits at oversampled baud.
+            - Store as TXstart _command in non volatile memory under the current profile. SP.green(TXstart command recorded!)
+            - If UART not received, Prompt user to “Release Transmit Button” and repeat step 5 times. If still not received, SP.red(Unable to read TX _command) and prompt user to retry or contact support. GUI returns to “LEARN” step 3 after 5 seconds. 
+            - Prompt user to “Release Transmit Button”.
+            - If UART received, record the incoming UART _command and stop when >16 unchanged bits are received. SP.green(TXstop Received).
+            - Clip the command to 4 high bits after the last low bit to ensure complete stop bits at oversampled baud.
+            - Store as TXstop _command in non volatile memory under the current profile. SP.green(TXstop command recorded!)
+            - If UART not received, go back to start and repeat step 5 times. If still not received, SP.red(Unable to read TX _command) and prompt user to retry or contact support. GUI returns to “LEARN” step 3 after 5 seconds.
+            - Hardware conflict has now ended and voltage analyser core can resume use of MUX1 (eg. set access required flag to 0).
 
 -------------
 
